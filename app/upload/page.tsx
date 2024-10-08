@@ -5,11 +5,12 @@ import { CldUploadWidget } from 'next-cloudinary';
 
 const UploadPage = () => {
     return (
-        <CldUploadWidget uploadPreset='t1sg8jqr'>
+        <CldUploadWidget uploadPreset='t1sg8jqr'
+        >
             {({ open }) => <button className='btn btn-primary' onClick={() => {
                 open();
             }}>Upload</button>}
-        </CldUploadWidget>
+        </CldUploadWidget >
     )
 }
 
