@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import schema from "./schema";
+import prisma from "@/prisma/client"
 
 // ถ้าไม่ใช้ NextResponse จะเป็นการ return ข้อมูลเป็น JSON โดยตรง
-export function GET(request: NextRequest) {
-    return NextResponse.json([{
-        id: 1,
-        name: "Leanne Graham",
-        email: "asdasd"
-    }, {
-        id: 2,
-        name: "Ervin Howell",
-    }]);
+export async function GET(request: NextRequest) {
+   const users = await prisma.user.findMany();
+
+   return NextResponse.json(users);
 }
 
 export async function POST(request: NextRequest) {
