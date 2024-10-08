@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    padding: 1rem
+
+@layer base{
+    h1{
+        @apply font-bold text-2xl bottom-3;
+    }
+    
 }
