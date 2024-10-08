@@ -4,9 +4,9 @@ import prisma from "@/prisma/client"
 
 // ถ้าไม่ใช้ NextResponse จะเป็นการ return ข้อมูลเป็น JSON โดยตรง
 export async function GET(request: NextRequest) {
-   const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany();
 
-   return NextResponse.json(users);
+    return NextResponse.json(users);
 }
 
 export async function POST(request: NextRequest) {
@@ -14,9 +14,22 @@ export async function POST(request: NextRequest) {
 
     //validate 
     const validateion = schema.safeParse(body);
-    // If invalid, return 400 error
     if (!validateion.success)
         return NextResponse.json(validateion.error.errors, { status: 400 });
     // Else return
-    return NextResponse.json({ id: 1, name: body.name });
+
+    const user = await prisma.user.findUnique({
+        where: {
+            email: body.email
+        }
+    })
+    if (user) return NextResponse.json({ error: "Email already exists" }, { status: 400 });
+
+    const newUser = await prisma.user.create({
+        data: {
+            name: body.name,
+            email: body.email
+        }
+    })
+    return NextResponse.json(newUser, { status: 201 });
 }

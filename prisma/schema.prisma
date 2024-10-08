@@ -20,3 +20,4 @@ model User {
   followers Int     @default(0)
   isActive  Boolean @default(true)
 }
+

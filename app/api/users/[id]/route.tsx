@@ -15,16 +15,20 @@ export async function GET(
     return NextResponse.json(user);
 }
 
-
 export async function POST(request: NextRequest) {
     const body = await request.json();
-
     //validate 
     // If invalid, return 400 error
+    const user =  prisma.user.create({
+        data: {
+            name: body.name,
+            email: body.email
+        }
+    })
     if (!body.name)
         return NextResponse.json({ error: "Name is required" }, { status: 400 });
     // Else return
-    return NextResponse.json({ id: 1, name: body.name });
+    return NextResponse.json(user, {status: 201});
 }
 
 export async function PUT(request: NextRequest,
