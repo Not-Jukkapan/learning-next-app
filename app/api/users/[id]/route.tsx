@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     //validate 
     // If invalid, return 400 error
-    const user =  prisma.user.create({
+    const user = prisma.user.create({
         data: {
             name: body.name,
             email: body.email
@@ -28,20 +28,38 @@ export async function POST(request: NextRequest) {
     if (!body.name)
         return NextResponse.json({ error: "Name is required" }, { status: 400 });
     // Else return
-    return NextResponse.json(user, {status: 201});
+    return NextResponse.json(user, { status: 201 });
 }
 
 export async function PUT(request: NextRequest,
-    { params }: { params: { id: number } }) {
+    { params }: { params: { id: string } }) {
     const body = await request.json();
     const validateion = schema.safeParse(body);
     if (!validateion.success)
         return NextResponse.json(validateion.error.errors, { status: 404 });
 
-    if (params.id > 10)
+    const user = await prisma.user.findUnique({
+        where: {
+            id: +params.id
+        }
+    });
+
+    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+    const updatedUser = await prisma.user.update({
+        where: {
+            id: +user.id
+        },
+        data: {
+            name: body.name,
+            email: body.email
+        }
+    })
+
+    if (+params.id > 10)
         return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-    return NextResponse.json({ id: 1, name: body.name });
+    return NextResponse.json(updatedUser);
 }
 
 export async function DELETE(
